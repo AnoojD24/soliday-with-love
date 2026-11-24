@@ -6,6 +6,7 @@ import {
   SPARKLES,
   XOXO_MARKS,
 } from '../../data/giftRevealCopy'
+import { useLiteEffects } from '../../hooks/useLiteEffects'
 import { KissMark } from './KissMark'
 
 interface AffectionParticlesProps {
@@ -33,17 +34,25 @@ export function AffectionParticles({
   className = '',
 }: AffectionParticlesProps) {
   const reduceMotion = useReducedMotion()
+  const lite = useLiteEffects()
   if (!burst && !ambient) return null
 
   const showStatic = Boolean(reduceMotion)
+  // Phones: fewer decorations + no infinite Motion loops after the burst.
+  const ambientOn = ambient && !lite && !showStatic
+  const delayScale = lite ? 0.45 : 1
+  const kisses = lite ? KISS_MARKS.slice(0, 6) : KISS_MARKS
+  const settled = lite ? SETTLED_HEARTS.slice(0, 8) : SETTLED_HEARTS
+  const floats = lite ? FLOAT_HEARTS.slice(0, 6) : FLOAT_HEARTS
+  const sparkles = lite ? SPARKLES.slice(0, 5) : SPARKLES
+  const xoxos = lite ? XOXO_MARKS.slice(0, 4) : XOXO_MARKS
 
   return (
     <div
       className={`pointer-events-none absolute inset-0 z-[5] overflow-visible ${className}`}
       aria-hidden="true"
     >
-      {/* Settled hearts — always visible once affection starts */}
-      {SETTLED_HEARTS.map((heart, index) => {
+      {settled.map((heart, index) => {
         const fill = index % 2 === 0 ? '#C67C98' : '#E8B7C8'
         if (showStatic) {
           return (
@@ -72,7 +81,7 @@ export function AffectionParticles({
             }}
             initial={{ opacity: 0, scale: 0.3, y: 10 }}
             animate={
-              ambient
+              ambientOn
                 ? {
                     opacity: [0.85, 1, 0.85],
                     scale: heart.scale,
@@ -81,7 +90,7 @@ export function AffectionParticles({
                 : { opacity: 1, scale: heart.scale, y: 0 }
             }
             transition={
-              ambient
+              ambientOn
                 ? {
                     duration: 2.8 + index * 0.2,
                     repeat: Infinity,
@@ -92,7 +101,7 @@ export function AffectionParticles({
                     type: 'spring',
                     stiffness: 170,
                     damping: 11,
-                    delay: heart.delay,
+                    delay: heart.delay * delayScale,
                   }
             }
           >
@@ -103,8 +112,7 @@ export function AffectionParticles({
         )
       })}
 
-      {/* Lipstick kisses — larger, more of them */}
-      {KISS_MARKS.map((kiss, index) => {
+      {kisses.map((kiss, index) => {
         const tone = TONES[index % TONES.length]
         const sizeRem = 3.45 * kiss.scale
         if (showStatic) {
@@ -134,7 +142,7 @@ export function AffectionParticles({
             }}
             initial={{ opacity: 0, scale: 0.2, y: 14 }}
             animate={
-              ambient
+              ambientOn
                 ? {
                     opacity: [0.8, 1, 0.8],
                     scale: kiss.scale,
@@ -153,7 +161,7 @@ export function AffectionParticles({
                   }
             }
             transition={
-              ambient
+              ambientOn
                 ? {
                     duration: 3.2 + (index % 4) * 0.25,
                     repeat: Infinity,
@@ -164,7 +172,7 @@ export function AffectionParticles({
                     type: 'spring',
                     stiffness: 150,
                     damping: 10,
-                    delay: kiss.delay,
+                    delay: kiss.delay * delayScale,
                   }
             }
           >
@@ -175,20 +183,20 @@ export function AffectionParticles({
         )
       })}
 
-      {XOXO_MARKS.map((mark) => (
+      {xoxos.map((mark) => (
         <motion.span
           key={mark.id}
           className="absolute whitespace-nowrap font-script text-lg font-semibold text-berry/85 sm:text-xl"
           style={{ left: `${mark.x}%`, top: `${mark.y}%` }}
           initial={showStatic ? false : { opacity: 0, scale: 0.6 }}
           animate={{ opacity: 0.9, scale: 1, rotate: mark.rotate }}
-          transition={{ delay: mark.delay, duration: 0.45 }}
+          transition={{ delay: mark.delay * delayScale, duration: 0.45 }}
         >
           {mark.text}
         </motion.span>
       ))}
 
-      {SPARKLES.map((sparkle) => (
+      {sparkles.map((sparkle) => (
         <motion.svg
           key={sparkle.id}
           viewBox="0 0 24 24"
@@ -196,14 +204,14 @@ export function AffectionParticles({
           style={{ left: `${sparkle.x}%`, top: `${sparkle.y}%` }}
           initial={showStatic ? false : { opacity: 0, scale: 0 }}
           animate={
-            ambient && !showStatic
+            ambientOn
               ? { opacity: [0.2, 1, 0.2], scale: [0.7, 1.25, 0.7] }
               : { opacity: 0.9, scale: 1 }
           }
           transition={
-            ambient && !showStatic
+            ambientOn
               ? { duration: 2.4, repeat: Infinity, delay: sparkle.delay }
-              : { delay: sparkle.delay, duration: 0.35 }
+              : { delay: sparkle.delay * delayScale, duration: 0.35 }
           }
         >
           <path
@@ -213,9 +221,8 @@ export function AffectionParticles({
         </motion.svg>
       ))}
 
-      {/* Rising hearts */}
       {!showStatic &&
-        FLOAT_HEARTS.map((heart) => (
+        floats.map((heart) => (
           <motion.div
             key={heart.id}
             className="absolute"
@@ -225,11 +232,11 @@ export function AffectionParticles({
               width: `${1.1 * heart.size}rem`,
             }}
             initial={{ opacity: 0, y: 0 }}
-            animate={{ opacity: [0, 0.95, 0], y: -72 }}
+            animate={{ opacity: [0, 0.95, 0], y: lite ? -48 : -72 }}
             transition={{
-              duration: heart.duration,
-              repeat: ambient ? Infinity : 0,
-              delay: heart.delay,
+              duration: lite ? Math.min(heart.duration, 2.4) : heart.duration,
+              repeat: ambientOn ? Infinity : 0,
+              delay: heart.delay * delayScale,
               ease: 'easeOut',
             }}
           >

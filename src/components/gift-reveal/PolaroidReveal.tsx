@@ -5,6 +5,7 @@ import {
   PHOTO_OBJECT_POSITION,
   type GiftRevealPhase,
 } from '../../data/giftRevealCopy'
+import { useLiteEffects } from '../../hooks/useLiteEffects'
 import trishaWebp from '../../assets/trisha.webp'
 import trishaJpg from '../../assets/trisha.jpg'
 
@@ -29,12 +30,14 @@ export function PolaroidReveal({
   className = '',
 }: PolaroidRevealProps) {
   const reduceMotion = useReducedMotion()
+  const lite = useLiteEffects()
   const completedRef = useRef(false)
   const visible = SHOW_FROM.includes(phase)
   const settled =
     phase === 'affectionBurst' ||
     phase === 'revealed' ||
     phase === 'continuing'
+  const floatAmbient = ambient && settled && !lite
 
   if (!visible) return null
 
@@ -51,18 +54,18 @@ export function PolaroidReveal({
       className={`relative mx-auto w-[78%] max-w-[300px] ${className}`}
       initial={{
         opacity: 0,
-        y: 100,
-        scale: 0.65,
+        y: lite ? 64 : 100,
+        scale: lite ? 0.78 : 0.65,
         rotate: 7,
       }}
       animate={{
         opacity: 1,
-        y: ambient && settled ? [0, -2.5, 0] : 0,
+        y: floatAmbient ? [0, -2.5, 0] : 0,
         scale: 1,
         rotate: 3,
       }}
       transition={
-        ambient && settled
+        floatAmbient
           ? {
               y: { duration: 4.5, repeat: Infinity, ease: 'easeInOut' },
               opacity: { duration: 0.8 },
@@ -71,8 +74,8 @@ export function PolaroidReveal({
             }
           : {
               type: 'spring',
-              stiffness: 90,
-              damping: 16,
+              stiffness: lite ? 120 : 90,
+              damping: lite ? 18 : 16,
               mass: 0.9,
             }
       }
@@ -95,14 +98,13 @@ export function PolaroidReveal({
         }}
         aria-hidden="true"
       />
-      <PolaroidFrame ambient={ambient && settled} />
+      <PolaroidFrame ambient={floatAmbient} />
       <div
         className="pointer-events-none absolute inset-0 -z-10 rounded-[1.25rem]"
         style={{
           background:
-            'radial-gradient(circle at 50% 40%, rgba(198,124,152,0.35), transparent 70%)',
-          filter: 'blur(12px)',
-          transform: 'scale(1.08)',
+            'radial-gradient(circle at 50% 40%, rgba(198,124,152,0.28), transparent 68%)',
+          transform: 'scale(1.06)',
         }}
         aria-hidden="true"
       />

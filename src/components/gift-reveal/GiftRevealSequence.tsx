@@ -131,11 +131,11 @@ export function GiftRevealSequence({
     phase === 'continuing'
   const showFinalCopy = phase === 'revealed' || phase === 'continuing'
   const ambient = showFinalCopy && documentVisible && !reduceMotion
+  // Burst only through the open — don't keep a confetti layer into revealed.
   const showConfetti =
     phase === 'unwrapping' ||
     phase === 'photoReveal' ||
-    phase === 'affectionBurst' ||
-    phase === 'revealed'
+    phase === 'affectionBurst'
 
   return (
     <main className="safe-top relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-x-clip px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-5">

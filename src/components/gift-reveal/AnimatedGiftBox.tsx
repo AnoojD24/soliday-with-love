@@ -64,17 +64,16 @@ export function AnimatedGiftBox({
 
       <ellipse cx="140" cy="214" rx="78" ry="12" fill="#80354D" opacity="0.08" />
 
-      {/* Soft inner glow once open */}
+      {/* Soft inner glow once open — opacity only (blur is costly on phones) */}
       <motion.ellipse
         cx="140"
         cy="150"
-        rx="54"
-        ry="28"
+        rx="58"
+        ry="32"
         fill="#F7DCE5"
         initial={{ opacity: 0 }}
-        animate={{ opacity: opens ? 0.85 : 0 }}
-        transition={{ duration: 0.5 }}
-        style={{ filter: 'blur(6px)' }}
+        animate={{ opacity: opens ? 0.55 : 0 }}
+        transition={{ duration: 0.45 }}
       />
 
       <motion.g
