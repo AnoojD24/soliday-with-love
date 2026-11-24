@@ -30,6 +30,7 @@ import {
   consumeWelcomeReplayOnBoot,
   createInitialState,
   loadState,
+  markWelcomeReplayFinished,
   saveState,
 } from '../utils/storage'
 
@@ -177,6 +178,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const completeOnboarding = useCallback(() => {
     dispatch({ type: 'COMPLETE_ONBOARDING' })
+    markWelcomeReplayFinished()
     setReplayingWelcome(false)
   }, [])
 
@@ -185,6 +187,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const finishWelcomeReplay = useCallback(() => {
+    markWelcomeReplayFinished()
     setReplayingWelcome(false)
   }, [])
 

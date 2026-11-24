@@ -27,8 +27,8 @@ import {
   consumeWelcomeReplayOnBoot,
   createInitialState,
   exportState,
-  getSolidayBuildId,
   isValidPersistedState,
+  markWelcomeReplayFinished,
   markWelcomeReplayPending,
   parseImportedState,
   resetWelcomeReplayConsumeLatch,
@@ -333,23 +333,30 @@ describe('persistence and onboarding', () => {
     resetWelcomeReplayConsumeLatch()
     // First-time user: new build tracking must not force a "replay".
     expect(consumeWelcomeReplayOnBoot(false)).toBe(false)
-    expect(store.get(LAST_SEEN_BUILD_KEY)).toBe(getSolidayBuildId())
+    expect(store.get(LAST_SEEN_BUILD_KEY)).toBeUndefined()
 
+    // Baseline an onboarded user on the current build.
+    markWelcomeReplayFinished()
     resetWelcomeReplayConsumeLatch()
-    // Same build, already onboarded → stay on home.
     expect(consumeWelcomeReplayOnBoot(true)).toBe(false)
 
     markWelcomeReplayPending()
     resetWelcomeReplayConsumeLatch()
     expect(consumeWelcomeReplayOnBoot(true)).toBe(true)
-    expect(store.get(PENDING_WELCOME_REPLAY_KEY)).toBeUndefined()
-    // StrictMode remount keeps the same decision.
+    // Sticky until finished — reload still replays.
+    expect(store.get(PENDING_WELCOME_REPLAY_KEY)).toBe('1')
     expect(consumeWelcomeReplayOnBoot(true)).toBe(true)
+
+    markWelcomeReplayFinished()
+    resetWelcomeReplayConsumeLatch()
+    expect(consumeWelcomeReplayOnBoot(true)).toBe(false)
 
     // Simulate a new deploy for an existing user.
     store.set(LAST_SEEN_BUILD_KEY, 'older-build')
     resetWelcomeReplayConsumeLatch()
     expect(consumeWelcomeReplayOnBoot(true)).toBe(true)
+    expect(store.get(PENDING_WELCOME_REPLAY_KEY)).toBe('1')
+    expect(store.get(LAST_SEEN_BUILD_KEY)).toBe('older-build')
   })
 })
 

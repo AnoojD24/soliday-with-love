@@ -195,7 +195,7 @@ export function getSolidayBuildId(): string {
 export function markWelcomeReplayPending(): void {
   welcomeReplayConsumed = null
   try {
-    // localStorage survives SW reclaim better than sessionStorage across updates.
+    // Sticky until the gift is finished — survives reloads mid-unwrap.
     localStorage.setItem(PENDING_WELCOME_REPLAY_KEY, '1')
   } catch {
     // Private mode / blocked storage — gift replay is best-effort.
@@ -205,31 +205,47 @@ export function markWelcomeReplayPending(): void {
 /**
  * After a new deploy (or explicit Refresh), reopen the welcome gift once
  * for users who already finished first onboarding. Progress is untouched.
+ *
+ * Does NOT mark the build as "seen" until markWelcomeReplayFinished() —
+ * that way a reload during the gift still shows it.
  */
 export function consumeWelcomeReplayOnBoot(onboardingCompleted: boolean): boolean {
   if (welcomeReplayConsumed !== null) return welcomeReplayConsumed
 
-  let pending = false
-  let buildChanged = false
   try {
-    pending = localStorage.getItem(PENDING_WELCOME_REPLAY_KEY) === '1'
-    if (pending) localStorage.removeItem(PENDING_WELCOME_REPLAY_KEY)
+    if (!onboardingCompleted) {
+      welcomeReplayConsumed = false
+      return false
+    }
 
+    const pending = localStorage.getItem(PENDING_WELCOME_REPLAY_KEY) === '1'
     const buildId = getSolidayBuildId()
     const lastSeen = localStorage.getItem(LAST_SEEN_BUILD_KEY)
-    buildChanged = lastSeen !== buildId
-    if (buildChanged) {
-      localStorage.setItem(LAST_SEEN_BUILD_KEY, buildId)
+    const buildChanged = lastSeen !== buildId
+
+    if (pending || buildChanged) {
+      localStorage.setItem(PENDING_WELCOME_REPLAY_KEY, '1')
+      welcomeReplayConsumed = true
+      return true
     }
+
+    welcomeReplayConsumed = false
+    return false
   } catch {
     welcomeReplayConsumed = false
     return false
   }
+}
 
-  // First-time gift is already shown via !onboardingCompleted — only replay after that.
-  const replay = onboardingCompleted && (pending || buildChanged)
-  welcomeReplayConsumed = replay
-  return replay
+/** Call when the welcome gift finishes (first-time or replay). */
+export function markWelcomeReplayFinished(): void {
+  welcomeReplayConsumed = false
+  try {
+    localStorage.removeItem(PENDING_WELCOME_REPLAY_KEY)
+    localStorage.setItem(LAST_SEEN_BUILD_KEY, getSolidayBuildId())
+  } catch {
+    // ignore
+  }
 }
 
 /** @deprecated Use consumeWelcomeReplayOnBoot — kept for tests/compat. */
