@@ -21,7 +21,7 @@ function buildFixture(kind) {
       version: 1,
       workouts,
       settings: {
-        goalWorkoutDays: 12,
+        goalWorkoutDays: 10,
         decisionDeadlineHours: 10,
         eveningReminderHour: 20,
       },
@@ -44,7 +44,7 @@ function buildFixture(kind) {
           : w,
       ),
       settings: {
-        goalWorkoutDays: 12,
+        goalWorkoutDays: 10,
         decisionDeadlineHours: 10,
         eveningReminderHour: 20,
       },
@@ -77,7 +77,7 @@ function buildFixture(kind) {
         return w
       }),
       settings: {
-        goalWorkoutDays: 12,
+        goalWorkoutDays: 10,
         decisionDeadlineHours: 10,
         eveningReminderHour: 20,
       },
@@ -102,7 +102,7 @@ function buildFixture(kind) {
           : w,
       ),
       settings: {
-        goalWorkoutDays: 12,
+        goalWorkoutDays: 10,
         decisionDeadlineHours: 10,
         eveningReminderHour: 20,
       },

@@ -37,6 +37,7 @@ type AppAction =
   | { type: 'UNLOCK_MILESTONES'; ids: MilestoneId[] }
   | { type: 'CELEBRATE_MILESTONES'; ids: MilestoneId[] }
   | { type: 'MARK_OPEN_WHEN_READ'; id: string }
+  | { type: 'MARK_FINAL_SURPRISE_SEEN' }
   | { type: 'REPLACE_STATE'; state: PersistedState }
   | { type: 'RESET_TO_SEED'; state: PersistedState }
 
@@ -96,7 +97,11 @@ function reducer(state: PersistedState, action: AppAction): PersistedState {
     case 'UPDATE_SETTINGS':
       return withMilestoneSync({
         ...state,
-        settings: { ...state.settings, ...action.settings },
+        settings: {
+          ...state.settings,
+          ...action.settings,
+          goalWorkoutDays: state.settings.goalWorkoutDays,
+        },
       })
     case 'UNLOCK_MILESTONES':
       return {
@@ -121,6 +126,9 @@ function reducer(state: PersistedState, action: AppAction): PersistedState {
         openedOpenWhenLetters: [...state.openedOpenWhenLetters, action.id],
       }
     }
+    case 'MARK_FINAL_SURPRISE_SEEN':
+      if (state.finalSurpriseSeen) return state
+      return { ...state, finalSurpriseSeen: true }
     case 'REPLACE_STATE':
     case 'RESET_TO_SEED':
       return action.state
@@ -146,6 +154,7 @@ interface AppStateContextValue {
   undoCompleteWorkout: (id: string) => void
   markMilestonesCelebrated: (ids: MilestoneId[]) => void
   markOpenWhenRead: (id: string) => void
+  markFinalSurpriseSeen: () => void
 }
 
 const AppStateContext = createContext<AppStateContextValue | null>(null)
@@ -260,6 +269,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'MARK_OPEN_WHEN_READ', id })
   }, [])
 
+  const markFinalSurpriseSeen = useCallback(() => {
+    dispatch({ type: 'MARK_FINAL_SURPRISE_SEEN' })
+  }, [])
+
   const value = useMemo(
     () => ({
       state,
@@ -278,6 +291,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       undoCompleteWorkout,
       markMilestonesCelebrated,
       markOpenWhenRead,
+      markFinalSurpriseSeen,
     }),
     [
       state,
@@ -296,6 +310,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       undoCompleteWorkout,
       markMilestonesCelebrated,
       markOpenWhenRead,
+      markFinalSurpriseSeen,
     ],
   )
 

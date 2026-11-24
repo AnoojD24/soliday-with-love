@@ -15,33 +15,50 @@ interface OpenWhenSectionProps {
   onOpened: (id: string) => void
 }
 
+const OPEN_DELAY_MS = 320
+const CLOSE_DELAY_MS = 480
+
 export function OpenWhenSection({
   openedIds,
   onOpened,
 }: OpenWhenSectionProps) {
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [animatingOpen, setAnimatingOpen] = useState(false)
+  const [flapOpen, setFlapOpen] = useState(false)
+  const [showLetter, setShowLetter] = useState(false)
   const reduceMotion = useReducedMotion()
 
   const active = OPEN_WHEN_LETTERS.find((letter) => letter.id === activeId)
 
   function openLetter(letter: OpenWhenLetter) {
+    if (activeId) return
     setActiveId(letter.id)
     onOpened(letter.id)
+
     if (reduceMotion) {
-      setAnimatingOpen(true)
+      setFlapOpen(true)
+      setShowLetter(true)
       return
     }
-    setAnimatingOpen(false)
-    window.requestAnimationFrame(() => setAnimatingOpen(true))
+
+    setFlapOpen(false)
+    setShowLetter(false)
+    window.requestAnimationFrame(() => {
+      setFlapOpen(true)
+      window.setTimeout(() => setShowLetter(true), OPEN_DELAY_MS)
+    })
   }
 
   function closeLetter() {
-    setAnimatingOpen(false)
-    window.setTimeout(
-      () => setActiveId(null),
-      reduceMotion ? 0 : 280,
-    )
+    if (reduceMotion) {
+      setShowLetter(false)
+      setFlapOpen(false)
+      setActiveId(null)
+      return
+    }
+
+    setShowLetter(false)
+    setFlapOpen(false)
+    window.setTimeout(() => setActiveId(null), CLOSE_DELAY_MS)
   }
 
   return (
@@ -70,8 +87,7 @@ export function OpenWhenSection({
               <OpenWhenEnvelope
                 paper={letter.paper}
                 accent={letter.accent}
-                icon={letter.icon}
-                opened={isActive && animatingOpen}
+                opened={isActive ? flapOpen : false}
                 className="mx-auto h-auto w-full max-w-[130px]"
               />
               <p className="mt-2 text-center font-display text-sm leading-snug text-berry">
@@ -92,7 +108,7 @@ export function OpenWhenSection({
       </p>
 
       <AnimatePresence>
-        {active && (
+        {active && showLetter && (
           <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
             <motion.button
               type="button"
@@ -101,6 +117,7 @@ export function OpenWhenSection({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
               onClick={closeLetter}
             />
             <motion.div
@@ -111,10 +128,14 @@ export function OpenWhenSection({
               initial={
                 reduceMotion
                   ? false
-                  : { opacity: 0, y: 24, scale: 0.96 }
+                  : { opacity: 0, y: 28, scale: 0.94 }
               }
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0, y: 16 }}
+              exit={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, y: 18, scale: 0.96 }
+              }
               transition={{ type: 'spring', stiffness: 280, damping: 28 }}
             >
               <div
@@ -132,7 +153,19 @@ export function OpenWhenSection({
                 <p className="font-script text-2xl text-berry">
                   {OPEN_WHEN_GREETING}
                 </p>
-                <p className="font-sans text-base leading-relaxed text-berry/85">
+                <figure className="overflow-hidden rounded-[1.25rem] border border-blush/50 bg-white shadow-[var(--shadow-soft)]">
+                  <picture>
+                    <source srcSet={active.photo.webp} type="image/webp" />
+                    <img
+                      src={active.photo.jpg}
+                      alt={active.photo.alt}
+                      className="max-h-[42vh] w-full object-cover object-center"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </figure>
+                <p className="whitespace-pre-line font-sans text-base leading-relaxed text-berry/85">
                   {active.body}
                 </p>
                 <p className="font-script text-xl text-berry">

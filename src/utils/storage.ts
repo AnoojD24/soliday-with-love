@@ -89,12 +89,15 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string')
 }
 
-/** Accepts current + legacy payloads missing openedOpenWhenLetters */
+/** Accepts current + legacy payloads missing openedOpenWhenLetters / finalSurpriseSeen */
 export function isValidPersistedState(value: unknown): value is PersistedState {
   if (!isObject(value)) return false
   const openedOk =
     value.openedOpenWhenLetters === undefined ||
     isStringArray(value.openedOpenWhenLetters)
+  const finalSeenOk =
+    value.finalSurpriseSeen === undefined ||
+    typeof value.finalSurpriseSeen === 'boolean'
   return (
     value.version === STORAGE_VERSION &&
     Array.isArray(value.workouts) &&
@@ -103,18 +106,26 @@ export function isValidPersistedState(value: unknown): value is PersistedState {
     typeof value.onboardingCompleted === 'boolean' &&
     isMilestoneArray(value.unlockedMilestones) &&
     isMilestoneArray(value.celebratedMilestones) &&
-    openedOk
+    openedOk &&
+    finalSeenOk
   )
 }
 
 export function normalizePersistedState(
-  value: PersistedState | Omit<PersistedState, 'openedOpenWhenLetters'> & {
+  value: PersistedState | (Omit<PersistedState, 'openedOpenWhenLetters' | 'finalSurpriseSeen'> & {
     openedOpenWhenLetters?: string[]
-  },
+    finalSurpriseSeen?: boolean
+  }),
 ): PersistedState {
   return {
     ...value,
+    settings: {
+      ...value.settings,
+      // Fixed Soliday challenge goal — legacy 12 (or any other) cannot override.
+      goalWorkoutDays: DEFAULT_SETTINGS.goalWorkoutDays,
+    },
     openedOpenWhenLetters: value.openedOpenWhenLetters ?? [],
+    finalSurpriseSeen: value.finalSurpriseSeen ?? false,
   }
 }
 
@@ -127,6 +138,7 @@ export function createInitialState(): PersistedState {
     unlockedMilestones: [],
     celebratedMilestones: [],
     openedOpenWhenLetters: [],
+    finalSurpriseSeen: false,
   }
 }
 

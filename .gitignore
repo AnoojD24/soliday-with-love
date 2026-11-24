@@ -43,3 +43,7 @@ tmp-muscle-map
 # OS
 Thumbs.db
 Desktop.ini
+
+# Private original photos (optimized copies live in src/assets/)
+photos/
+envelope_photos/

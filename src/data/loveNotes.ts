@@ -24,7 +24,7 @@ export const LOVE_NOTES: LoveNote[] = [
   },
   {
     id: 'six',
-    title: 'Halfway glow',
+    title: 'Look at you glow',
     thresholdDays: 6,
     letter:
       'Halfway there, baby. I hope you\'re as proud of yourself as I am of you.',
@@ -42,23 +42,12 @@ export const FINAL_SURPRISE = {
   id: 'twelve' as const satisfies MilestoneId,
   title: 'Merry Soliday',
   letter:
-    'You did it, beautiful. I\'m so proud of you. Merry Soliday. ♡',
+    "You did it! I'm so proud of you for completing your Soliday challenge. All those early mornings, difficult classes, and long days finally paid off. You deserve that hoodie and the biggest hug from me.",
   teaser: 'A little surprise wrapped just for you.',
 }
 
 export const DAILY_LOVE_NOTES = [
-  'You make ordinary mornings feel like something worth dressing up for.',
-  'I love the way you take care of yourself — softly, steadily, beautifully.',
-  'Wherever today lands, I\'m cheering for you.',
-  'Your strength looks lovely on you.',
-  'Rest when you need it. Shine when you\'re ready.',
-  'I packed a little extra pride into today, just in case you need it.',
-  'You are allowed to go gently and still be unstoppable.',
-  'Thinking of you between the warm-ups and the cool-downs.',
-  'Every class you choose is another love note to yourself.',
-  'I hope today feels kind in all the right places.',
-  'You\'re doing better than you think, beautiful.',
-  'Keep going at your pace. I\'ll be right here.',
+  '"Don\'t you worry your pretty little mind" — Taylor Swift the 🐐',
 ]
 
 export const PRE_CHALLENGE_MESSAGES = [

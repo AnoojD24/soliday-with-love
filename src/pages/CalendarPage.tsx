@@ -34,9 +34,7 @@ export function CalendarPage() {
 
   const focusDate = (location.state as { focusDate?: string } | null)?.focusDate
 
-  const [visibleMonth, setVisibleMonth] = useState(
-    () => new Date(2026, 11, 1),
-  )
+  const visibleMonth = useMemo(() => new Date(2026, 11, 1), [])
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = toDateKey(nowInLA())
     return today.startsWith('2026-12') ? today : '2026-12-03'
@@ -52,15 +50,8 @@ export function CalendarPage() {
   )
 
   useEffect(() => {
-    if (!focusDate) return
+    if (!focusDate?.startsWith('2026-12')) return
     setSelectedDate(focusDate)
-    setVisibleMonth(
-      new Date(
-        Number(focusDate.slice(0, 4)),
-        Number(focusDate.slice(5, 7)) - 1,
-        1,
-      ),
-    )
   }, [focusDate])
 
   const grouped = useMemo(
@@ -89,14 +80,9 @@ export function CalendarPage() {
 
   function handleSave(workout: Workout) {
     upsertWorkout(workout)
-    setSelectedDate(workout.date)
-    setVisibleMonth(
-      new Date(
-        Number(workout.date.slice(0, 4)),
-        Number(workout.date.slice(5, 7)) - 1,
-        1,
-      ),
-    )
+    if (workout.date.startsWith('2026-12')) {
+      setSelectedDate(workout.date)
+    }
     setFormOpen(false)
     setEditing(null)
   }
@@ -159,7 +145,6 @@ export function CalendarPage() {
         selectedDate={selectedDate}
         workouts={state.workouts}
         onSelectDate={setSelectedDate}
-        onChangeMonth={setVisibleMonth}
       />
 
       <section className="space-y-3">

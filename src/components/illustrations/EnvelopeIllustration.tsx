@@ -51,6 +51,7 @@ export function EnvelopeIllustration({
       <path
         d="M70 68s-7-4.5-7-8.2C63 57.2 65 55 67.5 55c1.4 0 2.6.8 3.5 1.9.9-1.1 2.1-1.9 3.5-1.9 2.5 0 4.5 2.2 4.5 4.8 0 3.7-7 8.2-7 8.2z"
         fill="#F7DCE5"
+        transform="translate(-1 0)"
       />
     </svg>
   )

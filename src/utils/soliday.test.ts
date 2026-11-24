@@ -207,20 +207,57 @@ describe('completion and progress', () => {
     expect(reversed.completedAt).toBeUndefined()
   })
 
-  it('generates hearts dynamically from the goal', () => {
-    expect(heartSlotsForGoal(12)).toHaveLength(12)
-    expect(heartSlotsForGoal(8)).toHaveLength(8)
+  it('generates ten collectible hearts for the Soliday goal', async () => {
+    const { SOLIDAY_GOAL_DAYS } = await import('../data/challenge')
+    expect(heartSlotsForGoal(SOLIDAY_GOAL_DAYS)).toHaveLength(10)
+    expect(heartSlotsForGoal(SOLIDAY_GOAL_DAYS)).toHaveLength(SOLIDAY_GOAL_DAYS)
   })
 
-  it('unlocks milestones at configured thresholds and respects goal', () => {
-    expect(getMilestoneIdsForDays(1, 12)).toEqual(['first'])
-    expect(getMilestoneIdsForDays(6, 12)).toEqual([
+  it('unlocks milestones at 1, 3, 6, 9 and final at 10', () => {
+    expect(getMilestoneIdsForDays(1, 10)).toEqual(['first'])
+    expect(getMilestoneIdsForDays(6, 10)).toEqual(['first', 'three', 'six'])
+    expect(getMilestoneIdsForDays(9, 10)).toEqual([
       'first',
       'three',
       'six',
+      'nine',
     ])
-    expect(getMilestoneIdsForDays(12, 12)).toContain('twelve')
-    expect(getNewlyUnlockedMilestones(3, 12, ['first'])).toEqual(['three'])
+    expect(getMilestoneIdsForDays(9, 10)).not.toContain('twelve')
+    expect(getMilestoneIdsForDays(10, 10)).toContain('twelve')
+    expect(getNewlyUnlockedMilestones(3, 10, ['first'])).toEqual(['three'])
+  })
+
+  it('counts only completed days inside Dec 3–17 for challenge progress', () => {
+    const workouts = createSeedWorkouts()
+    const withOutside = [
+      ...workouts,
+      {
+        ...workouts[0],
+        id: 'outside-before',
+        date: '2026-12-02',
+        attendanceStatus: 'completed' as const,
+        completedAt: '2026-12-02T20:00:00.000Z',
+      },
+      {
+        ...workouts[0],
+        id: 'outside-after',
+        date: '2026-12-18',
+        attendanceStatus: 'completed' as const,
+        completedAt: '2026-12-18T20:00:00.000Z',
+      },
+    ]
+    const edges = withOutside.map((w) =>
+      w.date === '2026-12-03' || w.date === '2026-12-17'
+        ? {
+            ...w,
+            attendanceStatus: 'completed' as const,
+            completedAt: `${w.date}T20:00:00.000Z`,
+          }
+        : w,
+    )
+    const stats = computeProgressStats(edges)
+    expect(stats.completedWorkoutDays).toBe(2)
+    expect(stats.completedClasses).toBeGreaterThanOrEqual(4)
   })
 })
 
@@ -229,8 +266,27 @@ describe('persistence and onboarding', () => {
     const state = createInitialState()
     expect(state.onboardingCompleted).toBe(false)
     expect(state.workouts).toHaveLength(13)
+    expect(state.settings.goalWorkoutDays).toBe(10)
     expect(state.openedOpenWhenLetters).toEqual([])
+    expect(state.finalSurpriseSeen).toBe(false)
     expect(isValidPersistedState(state)).toBe(true)
+  })
+
+  it('forces legacy goal of 12 to the fixed challenge goal of 10', () => {
+    const legacy = createInitialState()
+    legacy.settings.goalWorkoutDays = 12
+    const restored = parseImportedState(JSON.stringify(legacy))
+    expect(restored.settings.goalWorkoutDays).toBe(10)
+    expect(restored.workouts).toHaveLength(legacy.workouts.length)
+  })
+
+  it('defaults missing finalSurpriseSeen to false without wiping data', () => {
+    const legacy = createInitialState()
+    const { finalSurpriseSeen: _removed, ...without } = legacy
+    expect(isValidPersistedState(without)).toBe(true)
+    expect(parseImportedState(JSON.stringify(without)).finalSurpriseSeen).toBe(
+      false,
+    )
   })
 
   it('validates imported JSON and rejects invalid payloads', () => {
@@ -254,9 +310,9 @@ describe('persistence and onboarding', () => {
 })
 
 describe('open when letters', () => {
-  it('includes six always-available letters with editable content', async () => {
+  it('includes four always-available letters with editable content', async () => {
     const { OPEN_WHEN_LETTERS } = await import('../data/openWhenLetters')
-    expect(OPEN_WHEN_LETTERS).toHaveLength(6)
+    expect(OPEN_WHEN_LETTERS).toHaveLength(4)
     expect(OPEN_WHEN_LETTERS.every((letter) => letter.title && letter.body)).toBe(
       true,
     )

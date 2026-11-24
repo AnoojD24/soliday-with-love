@@ -30,10 +30,12 @@ import {
   nowInLA,
   toDateKey,
 } from '../utils/dates'
+import {
+  CHALLENGE_END,
+  CHALLENGE_START,
+  SOLIDAY_GOAL_DAYS,
+} from '../data/challenge'
 import { computeProgressStats } from '../utils/progress'
-
-const CHALLENGE_START = '2026-12-03'
-const CHALLENGE_END = '2026-12-17'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -226,10 +228,7 @@ export function HomePage() {
         </div>
         <p className="font-display text-3xl text-berry">
           {progress.completedWorkoutDays}
-          <span className="text-xl text-rose">
-            {' '}
-            / {state.settings.goalWorkoutDays}
-          </span>
+          <span className="text-xl text-rose"> / {SOLIDAY_GOAL_DAYS}</span>
         </p>
         <p className="mt-1 text-sm text-berry/70">workout days completed</p>
         <div className="mt-4 h-2 overflow-hidden rounded-full bg-blush/70">
@@ -238,9 +237,7 @@ export function HomePage() {
             style={{
               width: `${Math.min(
                 100,
-                (progress.completedWorkoutDays /
-                  state.settings.goalWorkoutDays) *
-                  100,
+                (progress.completedWorkoutDays / SOLIDAY_GOAL_DAYS) * 100,
               )}%`,
             }}
           />

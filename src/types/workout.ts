@@ -1,3 +1,5 @@
+import { SOLIDAY_GOAL_DAYS } from '../data/challenge'
+
 export type AttendanceStatus =
   | 'pending'
   | 'planned'
@@ -61,10 +63,12 @@ export interface PersistedState {
   celebratedMilestones: MilestoneId[]
   /** Open When letters that have been opened at least once */
   openedOpenWhenLetters: string[]
+  /** True after the Merry Soliday celebration completes once */
+  finalSurpriseSeen: boolean
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  goalWorkoutDays: 12,
+  goalWorkoutDays: SOLIDAY_GOAL_DAYS,
   decisionDeadlineHours: 10,
   eveningReminderHour: 20,
 }

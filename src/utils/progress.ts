@@ -1,3 +1,4 @@
+import { isChallengeDate, SOLIDAY_GOAL_DAYS } from '../data/challenge'
 import type { MilestoneId, Workout } from '../types/workout'
 import { needsCancellationReminder } from './attendance'
 
@@ -17,12 +18,14 @@ const MILESTONE_THRESHOLDS: { id: MilestoneId; days: number }[] = [
   { id: 'three', days: 3 },
   { id: 'six', days: 6 },
   { id: 'nine', days: 9 },
-  { id: 'twelve', days: 12 },
+  { id: 'twelve', days: SOLIDAY_GOAL_DAYS },
 ]
 
 export function computeProgressStats(workouts: Workout[]): ProgressStats {
   const completed = workouts.filter((w) => w.attendanceStatus === 'completed')
-  const completedDays = new Set(completed.map((w) => w.date))
+  const completedDays = new Set(
+    completed.filter((w) => isChallengeDate(w.date)).map((w) => w.date),
+  )
 
   const instructorFrequency: Record<string, number> = {}
   const muscleFrequency: Record<string, number> = {}

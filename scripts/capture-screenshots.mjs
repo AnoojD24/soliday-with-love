@@ -17,6 +17,9 @@ async function completeOnboarding(page) {
   const button = page.getByRole('button', { name: /unwrap your gift/i })
   await button.waitFor({ state: 'visible', timeout: 10000 })
   await button.click()
+  const continueCta = page.getByRole('button', { name: /let's sleigh/i })
+  await continueCta.waitFor({ state: 'visible', timeout: 12000 })
+  await continueCta.click()
   await page.getByRole('heading', { name: /hi, beautiful/i }).waitFor({
     timeout: 10000,
   })

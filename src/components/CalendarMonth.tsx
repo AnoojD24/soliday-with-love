@@ -1,4 +1,3 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { format } from 'date-fns'
 import type { Workout } from '../types/workout'
 import {
@@ -21,7 +20,6 @@ interface CalendarMonthProps {
   selectedDate: string
   workouts: Workout[]
   onSelectDate: (dateKey: string) => void
-  onChangeMonth: (next: Date) => void
 }
 
 const dayTone: Record<DayVisualStatus, string> = {
@@ -37,7 +35,6 @@ export function CalendarMonth({
   selectedDate,
   workouts,
   onSelectDate,
-  onChangeMonth,
 }: CalendarMonthProps) {
   const days = getMonthGrid(
     visibleMonth.getFullYear(),
@@ -47,49 +44,15 @@ export function CalendarMonth({
 
   return (
     <section className="rounded-[2rem] border border-blush/70 bg-white/80 p-4 shadow-[var(--shadow-soft)]">
-      <div className="mb-4 flex items-center justify-between">
-        <button
-          type="button"
-          className="touch-target inline-flex items-center justify-center rounded-full bg-cream text-berry"
-          aria-label="Previous month"
-          onClick={() =>
-            onChangeMonth(
-              new Date(
-                visibleMonth.getFullYear(),
-                visibleMonth.getMonth() - 1,
-                1,
-              ),
-            )
-          }
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <div className="text-center">
-          <p className="font-display text-xl text-berry">
-            {format(visibleMonth, 'MMMM yyyy')}
-          </p>
-          <div className="mt-1 flex items-center justify-center gap-2 text-[11px] text-rose">
-            <SnowflakeMark className="h-3.5 w-3.5" />
-            <span>Your Soliday month</span>
-            <SnowflakeMark className="h-3.5 w-3.5" />
-          </div>
+      <div className="mb-4 text-center">
+        <p className="font-display text-xl text-berry">
+          {format(visibleMonth, 'MMMM yyyy')}
+        </p>
+        <div className="mt-1 flex items-center justify-center gap-2 text-[11px] text-rose">
+          <SnowflakeMark className="h-3.5 w-3.5" />
+          <span>Your Soliday month</span>
+          <SnowflakeMark className="h-3.5 w-3.5" />
         </div>
-        <button
-          type="button"
-          className="touch-target inline-flex items-center justify-center rounded-full bg-cream text-berry"
-          aria-label="Next month"
-          onClick={() =>
-            onChangeMonth(
-              new Date(
-                visibleMonth.getFullYear(),
-                visibleMonth.getMonth() + 1,
-                1,
-              ),
-            )
-          }
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
       </div>
 
       <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[11px] font-medium tracking-wide text-rose">
@@ -122,11 +85,16 @@ export function CalendarMonth({
             <button
               key={key}
               type="button"
-              onClick={() => onSelectDate(key)}
+              disabled={!inMonth}
+              onClick={() => {
+                if (inMonth) onSelectDate(key)
+              }}
               className={`relative flex min-h-11 flex-col items-center justify-center rounded-2xl text-sm transition-colors ${
-                inMonth ? dayTone[status] : 'text-berry/25'
+                inMonth ? dayTone[status] : 'cursor-default text-berry/25'
               } ${selected ? 'ring-2 ring-berry ring-offset-2 ring-offset-white' : ''} ${
-                today && !selected ? 'outline outline-1 outline-rose/50' : ''
+                today && !selected && inMonth
+                  ? 'outline outline-1 outline-rose/50'
+                  : ''
               }`}
               aria-label={`${format(day, 'MMMM d')}${
                 dayWorkouts.length

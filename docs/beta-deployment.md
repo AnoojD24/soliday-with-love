@@ -2,6 +2,15 @@
 
 Private gift app for iPhone testing. No backend. Do **not** make the repo public or ship an unprotected production URL.
 
+## Privacy note — gift photograph
+
+The cinematic gift reveal embeds a personal photograph in the production JS/asset bundle.
+
+- Keep the GitHub repository **private**
+- Keep Vercel **Deployment Protection** / Shareable Link enabled
+- Anyone who can open the protected app can also download the photo asset from the bundle
+- Originals under `photos/` are gitignored; optimized copies live in `src/assets/`
+
 ## What is already verified in the codebase
 
 - Vite production build + SPA rewrites (`vercel.json`)

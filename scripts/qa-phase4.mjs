@@ -8,7 +8,7 @@ function state(overrides = {}) {
     version: 1,
     workouts: createSeedWorkouts(),
     settings: {
-      goalWorkoutDays: 12,
+      goalWorkoutDays: 10,
       decisionDeadlineHours: 10,
       eveningReminderHour: 20,
     },
@@ -65,6 +65,8 @@ async function main() {
   await page.getByRole('button', { name: /unwrap your gift/i }).waitFor()
   ok('First-launch welcome visible after clear', true)
   await page.getByRole('button', { name: /unwrap your gift/i }).click()
+  await page.getByRole('button', { name: /let's sleigh/i }).waitFor({ timeout: 12000 })
+  await page.getByRole('button', { name: /let's sleigh/i }).click()
   await page.getByRole('heading', { name: /hi, beautiful/i }).waitFor()
   ok('Unwrap transitions to Home', true)
 

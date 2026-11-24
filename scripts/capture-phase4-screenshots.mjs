@@ -12,7 +12,7 @@ function baseState(overrides = {}) {
     version: 1,
     workouts: createSeedWorkouts(),
     settings: {
-      goalWorkoutDays: 12,
+      goalWorkoutDays: 10,
       decisionDeadlineHours: 10,
       eveningReminderHour: 20,
     },

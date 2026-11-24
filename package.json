@@ -12,6 +12,7 @@
     "screenshots": "node scripts/capture-screenshots.mjs",
     "screenshots:phase4": "node scripts/capture-phase4-screenshots.mjs",
     "qa:phase4": "node scripts/qa-phase4.mjs",
+    "screenshots:gift": "node scripts/capture-gift-reveal.mjs",
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {

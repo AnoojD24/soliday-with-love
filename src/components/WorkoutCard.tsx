@@ -102,9 +102,9 @@ export function WorkoutCard({
               </p>
               <p className="mt-0.5 text-sm text-rose">{workout.instructor}</p>
             </div>
-            <div className="flex items-start gap-1">
+            <div className="flex shrink-0 items-center gap-1">
               <span
-                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${statusStyles(workout)}`}
+                className={`rounded-full px-2.5 py-1 text-[11px] font-medium leading-none ${statusStyles(workout)}`}
               >
                 {statusLabel(workout)}
               </span>
@@ -112,7 +112,7 @@ export function WorkoutCard({
                 <div className="relative" ref={menuRef}>
                   <button
                     type="button"
-                    className="touch-target inline-flex items-center justify-center rounded-full text-rose"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-rose"
                     aria-label="More actions"
                     aria-expanded={menuOpen}
                     onClick={() => setMenuOpen((open) => !open)}
