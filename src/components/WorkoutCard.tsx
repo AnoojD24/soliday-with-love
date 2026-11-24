@@ -3,7 +3,6 @@ import {
   Check,
   ChevronDown,
   Clock3,
-  MapPin,
   MoreHorizontal,
   Pencil,
   RotateCcw,
@@ -21,6 +20,7 @@ import {
 import { InstructorAvatar } from './InstructorAvatar'
 import { MuscleFocusTags } from './MuscleFocusTags'
 import { MuscleIllustration } from './illustrations/MuscleIllustration'
+import { StudioLocationLink } from './StudioLocationLink'
 import { Pressable } from './ui/Pressable'
 
 function statusLabel(workout: Workout): string {
@@ -173,9 +173,8 @@ export function WorkoutCard({
               <Clock3 className="h-4 w-4 text-rose" aria-hidden="true" />
               <span>{workout.durationMinutes} min</span>
             </p>
-            <p className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-rose" aria-hidden="true" />
-              <span>{workout.location}</span>
+            <p className="flex items-center gap-2 text-sm text-berry/80">
+              <StudioLocationLink location={workout.location} showIcon />
             </p>
           </div>
 

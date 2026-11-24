@@ -8,6 +8,7 @@ import {
 } from '../components/illustrations/Ornaments'
 import { InstructorAvatar } from '../components/InstructorAvatar'
 import { MuscleFocusTags } from '../components/MuscleFocusTags'
+import { StudioLocationLink } from '../components/StudioLocationLink'
 import { Pressable } from '../components/ui/Pressable'
 import { useAppState } from '../context/AppStateContext'
 import {
@@ -148,7 +149,12 @@ export function HomePage() {
                 <p className="mt-1 text-sm text-berry/80">
                   {nextWorkout.instructor}
                 </p>
-                <p className="text-sm text-rose">{nextWorkout.location}</p>
+                <p className="text-sm text-rose">
+                  <StudioLocationLink
+                    location={nextWorkout.location}
+                    className="text-sm text-rose"
+                  />
+                </p>
               </div>
             </div>
             <div className="mt-4">
@@ -289,7 +295,11 @@ export function HomePage() {
                     {formatClassTime(workout.startTime)} · {workout.classType}
                   </p>
                   <p className="text-sm text-rose">
-                    {workout.instructor} · {workout.location}
+                    {workout.instructor} ·{' '}
+                    <StudioLocationLink
+                      location={workout.location}
+                      className="text-sm text-rose"
+                    />
                   </p>
                 </div>
               ))}
