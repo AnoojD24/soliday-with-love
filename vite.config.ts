@@ -3,7 +3,16 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+/** Unique per deploy so a new Vercel build can reopen the welcome gift. */
+const solidayBuildId =
+  process.env.VERCEL_GIT_COMMIT_SHA != null
+    ? `${process.env.VERCEL_GIT_COMMIT_SHA}-${process.env.VERCEL_DEPLOYMENT_ID ?? Date.now()}`
+    : `local-${Date.now()}`
+
 export default defineConfig({
+  define: {
+    __SOLIDAY_BUILD_ID__: JSON.stringify(solidayBuildId),
+  },
   plugins: [
     react(),
     tailwindcss(),

@@ -22,10 +22,12 @@ import {
   getNewlyUnlockedMilestones,
   heartSlotsForGoal,
 } from './progress'
+import { LAST_SEEN_BUILD_KEY, PENDING_WELCOME_REPLAY_KEY } from '../types/workout'
 import {
-  consumeWelcomeReplayPending,
+  consumeWelcomeReplayOnBoot,
   createInitialState,
   exportState,
+  getSolidayBuildId,
   isValidPersistedState,
   markWelcomeReplayPending,
   parseImportedState,
@@ -311,9 +313,9 @@ describe('persistence and onboarding', () => {
     ).toEqual([])
   })
 
-  it('replays welcome gift once after a PWA update refresh flag', () => {
+  it('replays welcome gift on new build or explicit update refresh', () => {
     const store = new Map<string, string>()
-    const session = {
+    const local = {
       getItem: (key: string) => store.get(key) ?? null,
       setItem: (key: string, value: string) => {
         store.set(key, value)
@@ -323,22 +325,31 @@ describe('persistence and onboarding', () => {
       },
       clear: () => store.clear(),
     }
-    Object.defineProperty(globalThis, 'sessionStorage', {
-      value: session,
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: local,
       configurable: true,
     })
 
     resetWelcomeReplayConsumeLatch()
-    expect(consumeWelcomeReplayPending()).toBe(false)
+    // First-time user: new build tracking must not force a "replay".
+    expect(consumeWelcomeReplayOnBoot(false)).toBe(false)
+    expect(store.get(LAST_SEEN_BUILD_KEY)).toBe(getSolidayBuildId())
+
+    resetWelcomeReplayConsumeLatch()
+    // Same build, already onboarded → stay on home.
+    expect(consumeWelcomeReplayOnBoot(true)).toBe(false)
 
     markWelcomeReplayPending()
     resetWelcomeReplayConsumeLatch()
-    expect(consumeWelcomeReplayPending()).toBe(true)
-    // StrictMode remount / second read still true within the same boot.
-    expect(consumeWelcomeReplayPending()).toBe(true)
+    expect(consumeWelcomeReplayOnBoot(true)).toBe(true)
+    expect(store.get(PENDING_WELCOME_REPLAY_KEY)).toBeUndefined()
+    // StrictMode remount keeps the same decision.
+    expect(consumeWelcomeReplayOnBoot(true)).toBe(true)
 
+    // Simulate a new deploy for an existing user.
+    store.set(LAST_SEEN_BUILD_KEY, 'older-build')
     resetWelcomeReplayConsumeLatch()
-    expect(consumeWelcomeReplayPending()).toBe(false)
+    expect(consumeWelcomeReplayOnBoot(true)).toBe(true)
   })
 })
 

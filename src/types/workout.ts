@@ -77,4 +77,6 @@ export const STORAGE_VERSION = 1
 export const STORAGE_KEY = 'soliday-with-love-v1'
 /** Set before SW refresh so the next boot replays the welcome gift. */
 export const PENDING_WELCOME_REPLAY_KEY = 'soliday-pending-welcome-replay'
+/** Last app build that already showed / skipped the post-update gift. */
+export const LAST_SEEN_BUILD_KEY = 'soliday-last-seen-build'
 export const TIMEZONE = 'America/Los_Angeles'

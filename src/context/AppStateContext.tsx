@@ -27,7 +27,7 @@ import {
   getNewlyUnlockedMilestones,
 } from '../utils/progress'
 import {
-  consumeWelcomeReplayPending,
+  consumeWelcomeReplayOnBoot,
   createInitialState,
   loadState,
   saveState,
@@ -166,9 +166,9 @@ const AppStateContext = createContext<AppStateContextValue | null>(null)
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadState)
-  // After a PWA "Refresh" for a new deploy, reopen the welcome gift once.
+  // New Vercel deploy (or Refresh on update banner) → reopen welcome gift once.
   const [replayingWelcome, setReplayingWelcome] = useState(() =>
-    consumeWelcomeReplayPending(),
+    consumeWelcomeReplayOnBoot(loadState().onboardingCompleted),
   )
 
   useEffect(() => {

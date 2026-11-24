@@ -1,6 +1,7 @@
 import { createSeedWorkouts } from '../data/seedWorkouts'
 import {
   DEFAULT_SETTINGS,
+  LAST_SEEN_BUILD_KEY,
   PENDING_WELCOME_REPLAY_KEY,
   STORAGE_KEY,
   STORAGE_VERSION,
@@ -180,28 +181,60 @@ export function parseImportedState(raw: string): PersistedState {
 /** Survives React StrictMode double-mount in the same JS realm. */
 let welcomeReplayConsumed: boolean | null = null
 
+export function getSolidayBuildId(): string {
+  try {
+    return typeof __SOLIDAY_BUILD_ID__ === 'string' && __SOLIDAY_BUILD_ID__
+      ? __SOLIDAY_BUILD_ID__
+      : 'dev'
+  } catch {
+    return 'dev'
+  }
+}
+
 /** Mark that the next page load should open the welcome gift (PWA update refresh). */
 export function markWelcomeReplayPending(): void {
   welcomeReplayConsumed = null
   try {
-    sessionStorage.setItem(PENDING_WELCOME_REPLAY_KEY, '1')
+    // localStorage survives SW reclaim better than sessionStorage across updates.
+    localStorage.setItem(PENDING_WELCOME_REPLAY_KEY, '1')
   } catch {
     // Private mode / blocked storage — gift replay is best-effort.
   }
 }
 
-/** Consume the one-shot flag. Stable across StrictMode remounts. */
-export function consumeWelcomeReplayPending(): boolean {
+/**
+ * After a new deploy (or explicit Refresh), reopen the welcome gift once
+ * for users who already finished first onboarding. Progress is untouched.
+ */
+export function consumeWelcomeReplayOnBoot(onboardingCompleted: boolean): boolean {
   if (welcomeReplayConsumed !== null) return welcomeReplayConsumed
+
+  let pending = false
+  let buildChanged = false
   try {
-    const pending = sessionStorage.getItem(PENDING_WELCOME_REPLAY_KEY) === '1'
-    if (pending) sessionStorage.removeItem(PENDING_WELCOME_REPLAY_KEY)
-    welcomeReplayConsumed = pending
-    return pending
+    pending = localStorage.getItem(PENDING_WELCOME_REPLAY_KEY) === '1'
+    if (pending) localStorage.removeItem(PENDING_WELCOME_REPLAY_KEY)
+
+    const buildId = getSolidayBuildId()
+    const lastSeen = localStorage.getItem(LAST_SEEN_BUILD_KEY)
+    buildChanged = lastSeen !== buildId
+    if (buildChanged) {
+      localStorage.setItem(LAST_SEEN_BUILD_KEY, buildId)
+    }
   } catch {
     welcomeReplayConsumed = false
     return false
   }
+
+  // First-time gift is already shown via !onboardingCompleted — only replay after that.
+  const replay = onboardingCompleted && (pending || buildChanged)
+  welcomeReplayConsumed = replay
+  return replay
+}
+
+/** @deprecated Use consumeWelcomeReplayOnBoot — kept for tests/compat. */
+export function consumeWelcomeReplayPending(): boolean {
+  return consumeWelcomeReplayOnBoot(true)
 }
 
 /** Test helper — reset in-memory consume latch. */
