@@ -5,7 +5,7 @@ import {
   GIFT_REVEAL_TIMING,
   type GiftRevealPhase,
 } from '../../data/giftRevealCopy'
-import { BowMark, HeartMark } from '../illustrations/Ornaments'
+import { HeartMark } from '../illustrations/Ornaments'
 import { Pressable } from '../ui/Pressable'
 import { AffectionParticles } from './AffectionParticles'
 import { AnimatedGiftBox } from './AnimatedGiftBox'
@@ -147,10 +147,7 @@ export function GiftRevealSequence({
           className="h-10 w-10 rounded-2xl shadow-[var(--shadow-soft)]"
           aria-hidden="true"
         />
-        <div className="flex items-center gap-2">
-          <BowMark className="h-8 w-10" />
-          <HeartMark className="h-5 w-5 opacity-80" />
-        </div>
+        <HeartMark className="h-5 w-5 opacity-80" />
       </div>
 
       <motion.div

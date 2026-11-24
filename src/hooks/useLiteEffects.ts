@@ -43,5 +43,9 @@ function readLite() {
       (navigator as Navigator & { connection?: { saveData?: boolean } })
         .connection?.saveData,
     )
-  return coarse || narrow || saveData
+  // iPhone Safari specifically — even on larger iPads with fine pointer quirks.
+  const appleTouch =
+    typeof navigator !== 'undefined' &&
+    /iPhone|iPad|iPod/i.test(navigator.userAgent)
+  return coarse || narrow || saveData || appleTouch
 }

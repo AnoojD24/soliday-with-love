@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import type { GiftRevealPhase } from '../../data/giftRevealCopy'
+import { useLiteEffects } from '../../hooks/useLiteEffects'
 
 interface AnimatedGiftBoxProps {
   phase: GiftRevealPhase
@@ -13,6 +14,7 @@ export function AnimatedGiftBox({
   onUnwrappingComplete,
 }: AnimatedGiftBoxProps) {
   const reduceMotion = useReducedMotion()
+  const lite = useLiteEffects()
   const anticipates = phase === 'anticipation'
   const opens =
     phase === 'unwrapping' ||
@@ -21,6 +23,10 @@ export function AnimatedGiftBox({
     phase === 'revealed' ||
     phase === 'continuing'
   const sparkle = anticipates || opens
+  // Springs + multi-keyframe SVG motion are janky on iPhone — use short tweens.
+  const openTransition = lite
+    ? { duration: 0.32, ease: [0.22, 1, 0.36, 1] as const }
+    : { type: 'spring' as const, stiffness: 120, damping: 14, mass: 0.8 }
 
   if (reduceMotion && opens) {
     return (
@@ -102,11 +108,7 @@ export function AnimatedGiftBox({
               ? { y: [0, -2, 0], rotate: [0, -1, 1, 0] }
               : { y: 0, x: 0, rotate: 0 }
         }
-        transition={
-          opens
-            ? { type: 'spring', stiffness: 120, damping: 14, mass: 0.8 }
-            : { duration: 0.4 }
-        }
+        transition={opens ? openTransition : { duration: lite ? 0.25 : 0.4 }}
         onAnimationComplete={() => {
           if (phase === 'unwrapping') onUnwrappingComplete?.()
         }}
@@ -126,8 +128,10 @@ export function AnimatedGiftBox({
         }
         transition={
           opens
-            ? { type: 'spring', stiffness: 110, damping: 12, mass: 0.7 }
-            : { duration: 0.4 }
+            ? lite
+              ? { duration: 0.32, ease: [0.22, 1, 0.36, 1] }
+              : { type: 'spring', stiffness: 110, damping: 12, mass: 0.7 }
+            : { duration: lite ? 0.25 : 0.4 }
         }
       >
         <GiftBow open={opens} />
@@ -164,13 +168,20 @@ export function AnimatedGiftBox({
       />
 
       {sparkle &&
-        [
-          { cx: 118, cy: 78, delay: 0 },
-          { cx: 162, cy: 70, delay: 0.08 },
-          { cx: 140, cy: 58, delay: 0.14 },
-          { cx: 100, cy: 96, delay: 0.1 },
-          { cx: 180, cy: 92, delay: 0.16 },
-        ].map((s) => (
+        (lite
+          ? [
+              { cx: 118, cy: 78, delay: 0 },
+              { cx: 162, cy: 70, delay: 0.06 },
+              { cx: 140, cy: 58, delay: 0.1 },
+            ]
+          : [
+              { cx: 118, cy: 78, delay: 0 },
+              { cx: 162, cy: 70, delay: 0.08 },
+              { cx: 140, cy: 58, delay: 0.14 },
+              { cx: 100, cy: 96, delay: 0.1 },
+              { cx: 180, cy: 92, delay: 0.16 },
+            ]
+        ).map((s) => (
           <motion.circle
             key={`${s.cx}-${s.cy}`}
             cx={s.cx}
@@ -189,6 +200,7 @@ export function AnimatedGiftBox({
 
       {/* Hearts escaping the opening */}
       {opens &&
+        !lite &&
         [
           { x: 130, delay: 0.05 },
           { x: 150, delay: 0.12 },

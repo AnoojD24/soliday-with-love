@@ -129,3 +129,28 @@
     transition: none;
   }
 }
+
+/* Light draw-in for desktop hug ribbons (phones skip Motion pathLength). */
+@keyframes soliday-draw {
+  from {
+    stroke-dashoffset: 1200;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes soliday-draw {
+    from {
+      stroke-dashoffset: 0;
+      opacity: 0.55;
+    }
+    to {
+      stroke-dashoffset: 0;
+      opacity: 0.55;
+    }
+  }
+}

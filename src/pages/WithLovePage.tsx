@@ -1,6 +1,6 @@
 import { FinalSurpriseReveal } from '../components/final-surprise/FinalSurpriseReveal'
 import { SurpriseGiftIllustration } from '../components/illustrations/EnvelopeIllustration'
-import { BowMark, HeartMark } from '../components/illustrations/Ornaments'
+import { HeartMark } from '../components/illustrations/Ornaments'
 import { OpenWhenSection } from '../components/OpenWhenSection'
 import { Pressable } from '../components/ui/Pressable'
 import { useAppState } from '../context/AppStateContext'
@@ -31,7 +31,6 @@ export function WithLovePage() {
             className="h-9 w-9 rounded-xl shadow-[var(--shadow-soft)]"
             aria-hidden="true"
           />
-          <BowMark className="h-7 w-9" />
           <HeartMark className="h-4 w-4" />
         </div>
         <p className="text-sm text-rose">Notes tucked between the workouts</p>

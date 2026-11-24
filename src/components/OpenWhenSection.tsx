@@ -7,6 +7,7 @@ import {
   OPEN_WHEN_SECTION,
   type OpenWhenLetter,
 } from '../data/openWhenLetters'
+import { useLiteEffects } from '../hooks/useLiteEffects'
 import { OpenWhenEnvelope } from './illustrations/OpenWhenEnvelope'
 import { Pressable } from './ui/Pressable'
 
@@ -14,9 +15,6 @@ interface OpenWhenSectionProps {
   openedIds: string[]
   onOpened: (id: string) => void
 }
-
-const OPEN_DELAY_MS = 320
-const CLOSE_DELAY_MS = 480
 
 export function OpenWhenSection({
   openedIds,
@@ -26,6 +24,11 @@ export function OpenWhenSection({
   const [flapOpen, setFlapOpen] = useState(false)
   const [showLetter, setShowLetter] = useState(false)
   const reduceMotion = useReducedMotion()
+  const lite = useLiteEffects()
+
+  // Shorter choreography on phones — less time with 4 SVGs + a modal fighting the GPU.
+  const openDelayMs = reduceMotion ? 0 : lite ? 180 : 300
+  const closeDelayMs = reduceMotion ? 0 : lite ? 220 : 420
 
   const active = OPEN_WHEN_LETTERS.find((letter) => letter.id === activeId)
 
@@ -44,7 +47,7 @@ export function OpenWhenSection({
     setShowLetter(false)
     window.requestAnimationFrame(() => {
       setFlapOpen(true)
-      window.setTimeout(() => setShowLetter(true), OPEN_DELAY_MS)
+      window.setTimeout(() => setShowLetter(true), openDelayMs)
     })
   }
 
@@ -58,7 +61,7 @@ export function OpenWhenSection({
 
     setShowLetter(false)
     setFlapOpen(false)
-    window.setTimeout(() => setActiveId(null), CLOSE_DELAY_MS)
+    window.setTimeout(() => setActiveId(null), closeDelayMs)
   }
 
   return (
@@ -117,7 +120,7 @@ export function OpenWhenSection({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: lite ? 0.15 : 0.22 }}
               onClick={closeLetter}
             />
             <motion.div
@@ -128,15 +131,25 @@ export function OpenWhenSection({
               initial={
                 reduceMotion
                   ? false
-                  : { opacity: 0, y: 28, scale: 0.94 }
+                  : lite
+                    ? { opacity: 0, y: 12 }
+                    : { opacity: 0, y: 28, scale: 0.94 }
               }
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              animate={
+                lite ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, scale: 1 }
+              }
               exit={
                 reduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, y: 18, scale: 0.96 }
+                  : lite
+                    ? { opacity: 0, y: 8 }
+                    : { opacity: 0, y: 18, scale: 0.96 }
               }
-              transition={{ type: 'spring', stiffness: 280, damping: 28 }}
+              transition={
+                lite || reduceMotion
+                  ? { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
+                  : { type: 'spring', stiffness: 280, damping: 28 }
+              }
             >
               <div
                 className="px-5 py-4"

@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from 'motion/react'
+import { useReducedMotion } from 'motion/react'
+import { useLiteEffects } from '../../hooks/useLiteEffects'
 
 interface OpenWhenEnvelopeProps {
   paper: string
@@ -7,8 +8,10 @@ interface OpenWhenEnvelopeProps {
   className?: string
 }
 
-const FLAP_EASE = [0.22, 1, 0.36, 1] as const
-
+/**
+ * CSS-driven flap (no Framer Motion on SVG). iPhone Safari stalls hard on
+ * Motion-animated <g> rotates; compositor transitions stay smooth.
+ */
 export function OpenWhenEnvelope({
   paper,
   accent,
@@ -16,7 +19,11 @@ export function OpenWhenEnvelope({
   className = '',
 }: OpenWhenEnvelopeProps) {
   const reduceMotion = useReducedMotion()
-  const duration = reduceMotion ? 0.01 : 0.55
+  const lite = useLiteEffects()
+  const instant = Boolean(reduceMotion)
+  const ms = instant ? 0 : lite ? 280 : 450
+  const ease = 'cubic-bezier(0.22, 1, 0.36, 1)'
+  const flapDeg = lite ? -148 : -168
 
   return (
     <svg
@@ -27,7 +34,6 @@ export function OpenWhenEnvelope({
       aria-hidden="true"
       style={{ overflow: 'visible' }}
     >
-      {/* envelope back */}
       <rect
         x="14"
         y="36"
@@ -39,16 +45,15 @@ export function OpenWhenEnvelope({
         strokeWidth="2"
       />
 
-      {/* letter rising from inside */}
-      <motion.g
-        initial={false}
-        animate={
-          opened ? { y: -24, opacity: 1 } : { y: 12, opacity: 0 }
-        }
-        transition={{
-          duration: reduceMotion ? 0.01 : 0.45,
-          ease: FLAP_EASE,
-          delay: opened && !reduceMotion ? 0.1 : 0,
+      {/* letter rising — skipped on lite (snap) to cut paint work */}
+      <g
+        style={{
+          opacity: opened ? 1 : 0,
+          transform: opened ? 'translateY(-22px)' : 'translateY(10px)',
+          transition: lite || instant
+            ? `opacity ${ms}ms ${ease}`
+            : `transform ${ms}ms ${ease}, opacity ${ms}ms ${ease}`,
+          transitionDelay: opened && !instant && !lite ? '60ms' : '0ms',
         }}
       >
         <rect
@@ -68,9 +73,8 @@ export function OpenWhenEnvelope({
           strokeLinecap="round"
           opacity="0.45"
         />
-      </motion.g>
+      </g>
 
-      {/* left & right inner folds */}
       <path
         d="M16 42l54 36v26H22c-3.3 0-6-2.7-6-6V42z"
         fill={paper}
@@ -88,7 +92,6 @@ export function OpenWhenEnvelope({
         opacity="0.92"
       />
 
-      {/* front bottom panel */}
       <path
         d="M16 104c0 3.3 2.7 6 6 6h96c3.3 0 6-2.7 6-6V78L70 48 16 78v26z"
         fill={paper}
@@ -103,12 +106,14 @@ export function OpenWhenEnvelope({
         opacity="0.3"
       />
 
-      {/* flap hinges at top edge, folds back when opened */}
-      <motion.g
-        initial={false}
-        animate={opened ? { rotate: -172 } : { rotate: 0 }}
-        transition={{ duration, ease: FLAP_EASE }}
-        style={{ transformOrigin: '70px 42px' }}
+      {/* flap */}
+      <g
+        style={{
+          transformOrigin: '70px 42px',
+          transformBox: 'view-box',
+          transform: opened ? `rotate(${flapDeg}deg)` : 'rotate(0deg)',
+          transition: `transform ${ms}ms ${ease}`,
+        }}
       >
         <path
           d="M16 42l54 36 54-36"
@@ -117,34 +122,31 @@ export function OpenWhenEnvelope({
           strokeWidth="2"
           strokeLinejoin="round"
         />
-        <motion.path
+        <path
           d="M16 42l54 36 54-36"
           fill={paper}
           stroke={accent}
           strokeWidth="2"
           strokeLinejoin="round"
-          initial={false}
-          animate={{ opacity: opened ? 0 : 1 }}
-          transition={{
-            duration: reduceMotion ? 0.01 : 0.18,
-            delay: opened && !reduceMotion ? 0.12 : 0,
+          style={{
+            opacity: opened ? 0 : 1,
+            transition: `opacity ${instant ? 0 : 140}ms linear`,
+            transitionDelay: opened && !instant ? '80ms' : '0ms',
           }}
         />
-      </motion.g>
+      </g>
 
       {/* wax seal */}
-      <motion.g
-        initial={false}
-        animate={
-          opened
-            ? { scale: 0.5, y: 12, opacity: 0 }
-            : { scale: 1, y: 0, opacity: 1 }
-        }
-        transition={{
-          duration: reduceMotion ? 0.01 : 0.35,
-          ease: FLAP_EASE,
+      <g
+        style={{
+          transformOrigin: '70px 68px',
+          transformBox: 'view-box',
+          transform: opened
+            ? 'translateY(10px) scale(0.55)'
+            : 'translateY(0px) scale(1)',
+          opacity: opened ? 0 : 1,
+          transition: `transform ${ms}ms ${ease}, opacity ${Math.min(ms, 280)}ms ${ease}`,
         }}
-        style={{ transformOrigin: '70px 68px' }}
       >
         <circle
           cx="70"
@@ -159,7 +161,7 @@ export function OpenWhenEnvelope({
           fill="#F7DCE5"
           transform="translate(-1 0)"
         />
-      </motion.g>
+      </g>
     </svg>
   )
 }
