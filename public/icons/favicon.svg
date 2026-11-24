@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Soliday With Love">
+  <rect width="512" height="512" fill="#F5D6E2"/>
+
+  <circle cx="98" cy="120" r="6" fill="#FFFFFF" opacity="0.55"/>
+  <circle cx="414" cy="136" r="4.5" fill="#FFFFFF" opacity="0.5"/>
+  <circle cx="428" cy="368" r="5" fill="#EFE0F5" opacity="0.75"/>
+  <circle cx="90" cy="376" r="4" fill="#FFFFFF" opacity="0.4"/>
+  <path d="M132 172l5 10 11 1.5-8 7.5 2.5 10.5-10.5-5.5-10.5 5.5 2.5-10.5-8-7.5 11-1.5 5-10z" fill="#FFFFFF" opacity="0.35"/>
+  <path d="M382 388l4 8 9 1-6.5 6 2 8.5-8.5-4.5-8.5 4.5 2-8.5-6.5-6 9-1 4-8z" fill="#FFFFFF" opacity="0.3"/>
+
+  <!-- flowing ribbon tails -->
+  <path d="M234 300C208 348 164 382 128 396c36-18 62-46 74-84 8-24 18-40 32-12z" fill="#C67C98"/>
+  <path d="M278 300C304 348 348 382 384 396c-36-18-62-46-74-84-8-24-18-40-32-12z" fill="#A85F7D"/>
+  <path d="M246 296c-6 48-2 88 10 122 0-32 6-66 16-98 5-16-8-24-26-24z" fill="#C67C98" opacity="0.9"/>
+  <path d="M266 296c6 48 2 88-10 122 0-32-6-66-16-98-5-16 8-24 26-24z" fill="#80354D"/>
+
+  <!-- bow loops -->
+  <path d="M256 236C188 140 84 168 118 258c48-22 86-10 138-22z" fill="#C67C98"/>
+  <path d="M256 236C324 140 428 168 394 258c-48-22-86-10-138-22z" fill="#80354D"/>
+  <path d="M198 208c-22-10-48-4-56 18 22-6 42 2 56-18z" fill="#F7DCE5" opacity="0.45"/>
+  <path d="M314 208c22-10 48-4 56 18-22-6-42 2-56-18z" fill="#C67C98" opacity="0.35"/>
+
+  <!-- center knot -->
+  <circle cx="256" cy="236" r="30" fill="#F7DCE5" stroke="#80354D" stroke-width="7"/>
+  <path d="M256 254c-20-14-38-28-38-46 0-13 10-24 24-24 8 0 14 4 19 10 5-6 11-10 19-10 14 0 24 11 24 24 0 18-18 32-38 46z" fill="#80354D"/>
+</svg>

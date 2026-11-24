@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/500.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/dm-sans/400.css';
+@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/dm-sans/600.css';
+@import '@fontsource/dm-sans/700.css';
+@import '@fontsource/caveat/500.css';
+@import '@fontsource/caveat/600.css';
+
+@theme {
+  --color-cream: #fff6f2;
+  --color-blush: #f7dce5;
+  --color-rose: #c67c98;
+  --color-berry: #80354d;
+  --color-sage: #dde8da;
+  --color-lavender: #efe0f5;
+  --color-white: #ffffff;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-script: 'Caveat', 'Segoe Script', cursive;
+
+  --shadow-soft: 0 10px 30px rgba(128, 53, 77, 0.08);
+  --shadow-lift: 0 14px 36px rgba(128, 53, 77, 0.12);
+}
+
+@layer base {
+  :root {
+    color: var(--color-berry);
+    background: var(--color-cream);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background:
+      radial-gradient(circle at top left, rgba(247, 220, 229, 0.7), transparent 36%),
+      radial-gradient(circle at top right, rgba(239, 224, 245, 0.55), transparent 30%),
+      linear-gradient(180deg, #fff8f5 0%, #fff6f2 48%, #f8efe9 100%);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: calc(6.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .safe-top {
+    padding-top: max(1rem, env(safe-area-inset-top, 0px));
+  }
+
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Open Muscle Map — Soliday palette overrides */
+.soliday-muscle-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 24rem;
+}
+
+.soliday-muscle-figure [id*='silhouette'] path {
+  fill: #efe5e1;
+  stroke: #c9b3b2;
+  stroke-width: 1.2;
+}
+
+.soliday-muscle-figure [data-muscle-id] path {
+  fill: #e6d6d2;
+  stroke: #c9b3b2;
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  transition: fill 160ms ease, stroke 160ms ease;
+}
+
+.soliday-muscle-figure [data-kind='non_muscle'] path,
+.soliday-muscle-figure [data-selectable='false'] path {
+  fill: #efe5e1;
+  stroke: #d7c4c2;
+  stroke-width: 1;
+}
+
+.soliday-muscle-figure [data-muscle-id].is-active path {
+  fill: #c67c98;
+  stroke: #80354d;
+  stroke-width: 1.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soliday-muscle-figure [data-muscle-id] path {
+    transition: none;
+  }
+}

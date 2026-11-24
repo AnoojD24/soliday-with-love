@@ -1,0 +1,45 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+.vercel
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test / QA artifacts
+coverage
+playwright-report
+test-results
+screenshots
+tmp-muscle-map
+*.tsbuildinfo
+
+# OS
+Thumbs.db
+Desktop.ini
