@@ -9,6 +9,6 @@ export const DAILY_MOTIVATIONS = [
   'You make showing up look graceful.',
   'Small steps still count when they are done with care.',
   'Today can be steady, soft, and enough.',
-  'Your Soliday era is already unfolding beautifully.',
+  'Your Solidays era is already unfolding beautifully.',
   'Be kind to the girl who keeps choosing herself.',
 ]

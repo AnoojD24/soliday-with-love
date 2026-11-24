@@ -98,7 +98,7 @@ export function CalendarPage() {
     setPendingCelebrations(newly)
     setCelebrationMessage(
       newly.length > 0
-        ? 'A new Soliday milestone just unlocked. Your hearts are glowing.'
+        ? 'A new Solidays milestone just unlocked. Your hearts are glowing.'
         : 'Another beautiful class in the books. Be proud of yourself.',
     )
     setCelebrationOpen(true)
@@ -221,7 +221,7 @@ export function CalendarPage() {
         onClose={() => setPendingDelete(null)}
       >
         <p className="text-sm leading-relaxed text-berry/80">
-          This removes the session from Soliday only. It does not cancel your
+          This removes the session from Solidays only. It does not cancel your
           solidcore reservation.
         </p>
         <div className="mt-5 flex gap-2">

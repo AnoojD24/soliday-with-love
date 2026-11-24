@@ -50,7 +50,7 @@ export function CalendarMonth({
         </p>
         <div className="mt-1 flex items-center justify-center gap-2 text-[11px] text-rose">
           <SnowflakeMark className="h-3.5 w-3.5" />
-          <span>Your Soliday month</span>
+          <span>Your Solidays month</span>
           <SnowflakeMark className="h-3.5 w-3.5" />
         </div>
       </div>

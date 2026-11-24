@@ -64,7 +64,7 @@ export function buildIcsCalendar(events: CalendarEventInput[]): string {
   const lines: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Soliday With Love//EN',
+    'PRODID:-//Solidays With Love//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
   ]
@@ -104,7 +104,7 @@ export function workoutToCalendarEvent(workout: Workout): CalendarEventInput {
     `Studio: ${workout.location}`,
     `Focus: ${muscles}`,
     '',
-    'Exported from Soliday With Love.',
+    'Exported from Solidays With Love.',
     'This calendar event does not create or cancel solidcore reservations.',
   ].join('\n')
 
@@ -156,10 +156,10 @@ export function eveningReminderEvent(
   const start = getEveningReminder(date, eveningHour)
   return {
     uid: `soliday-evening-${date}@soliday-with-love`,
-    title: `Soliday decision reminder · ${date}`,
+    title: `Solidays decision reminder · ${date}`,
     description: [
       `Gentle reminder: ${sessionCount} flexible booking${sessionCount > 1 ? 's' : ''} tomorrow still need a choice.`,
-      'Open Soliday With Love to decide — and cancel unused reservations in the solidcore app separately.',
+      'Open Solidays With Love to decide — and cancel unused reservations in the solidcore app separately.',
       'This reminder uses your personal preference, not official studio policy.',
     ].join('\n'),
     start,

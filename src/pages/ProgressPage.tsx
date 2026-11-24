@@ -18,9 +18,9 @@ function progressEncouragement(completedDays: number): string {
     return 'One more day until you reach your goal — and that cute hoodie!'
   }
   if (completedDays === Math.floor(SOLIDAY_GOAL_DAYS / 2)) {
-    return 'Halfway there, teddy! I\'m so proud of you. One step closer to your Soliday hoodie!'
+    return 'Halfway there, teddy! I\'m so proud of you. One step closer to your Solidays hoodie!'
   }
-  return 'One step closer to your Soliday hoodie!'
+  return 'One step closer to your Solidays hoodie!'
 }
 
 export function ProgressPage() {

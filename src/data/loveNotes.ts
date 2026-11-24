@@ -13,7 +13,7 @@ export const LOVE_NOTES: LoveNote[] = [
     title: 'First spark',
     thresholdDays: 1,
     letter:
-      'Your Soliday era has officially begun. I\'m already proud of you.',
+      'Your Solidays era has officially begun. I\'m already proud of you.',
   },
   {
     id: 'three',
@@ -40,9 +40,9 @@ export const LOVE_NOTES: LoveNote[] = [
 
 export const FINAL_SURPRISE = {
   id: 'twelve' as const satisfies MilestoneId,
-  title: 'Merry Soliday',
+  title: 'Merry Solidays',
   letter:
-    "You did it! I'm so proud of you for completing your Soliday challenge. All those early mornings, difficult classes, and long days finally paid off. You deserve that hoodie and the biggest hug from me.",
+    "You did it! I'm so proud of you for completing your Solidays challenge. All those early mornings, difficult classes, and long days finally paid off. You deserve that hoodie and the biggest hug from me.",
   teaser: 'A little surprise wrapped just for you.',
 }
 
@@ -51,7 +51,7 @@ export const DAILY_LOVE_NOTES = [
 ]
 
 export const PRE_CHALLENGE_MESSAGES = [
-  'Soliday is almost here. Soft mornings, strong finishes, and a little love along the way.',
+  'Solidays is almost here. Soft mornings, strong finishes, and a little love along the way.',
   'Your December chapter is waiting. No rush — just a beautiful beginning ahead.',
   'Before the first class, take a breath. You already belong in this journey.',
 ]

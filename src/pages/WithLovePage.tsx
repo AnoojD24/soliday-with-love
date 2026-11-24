@@ -40,7 +40,7 @@ export function WithLovePage() {
       <section className="rounded-[2rem] border border-blush/70 bg-white/85 p-5 shadow-[var(--shadow-soft)]">
         <p className="font-script text-2xl text-berry">For Trisha</p>
         <p className="mt-3 text-sm leading-relaxed text-berry/75">
-          A little surprise waits at the end of your Soliday journey — sealed
+          A little surprise waits at the end of your Solidays journey — sealed
           with care, opened with pride.
         </p>
         <p className="mt-4 text-xs tracking-[0.12em] text-rose uppercase">

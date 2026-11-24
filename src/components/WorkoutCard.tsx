@@ -206,7 +206,7 @@ export function WorkoutCard({
             <div className="mt-3 rounded-2xl bg-[#fff0f3] px-3 py-3">
               <p className="text-xs leading-relaxed text-[#9b3a4f]">
                 Cancel this reservation in the official solidcore app when
-                you can. Soliday does not cancel bookings.
+                you can. Solidays does not cancel bookings.
               </p>
               <label className="mt-2 flex min-h-11 items-center gap-2 text-xs text-berry">
                 <input

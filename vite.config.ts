@@ -26,8 +26,8 @@ export default defineConfig({
         'icons/icon-512-maskable.png',
       ],
       manifest: {
-        name: 'Soliday With Love',
-        short_name: 'Soliday ♡',
+        name: 'Solidays With Love',
+        short_name: 'Solidays ♡',
         description:
           'A personalized December solidcore companion — workouts, progress, and a little love along the way.',
         theme_color: '#F5D6E2',

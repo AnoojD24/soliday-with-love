@@ -2,7 +2,7 @@
 
 export const GIFT_REVEAL_COPY = {
   welcomeEyebrow: 'A little Christmas gift for you',
-  brandTitle: 'Soliday With Love',
+  brandTitle: 'Solidays With Love',
   welcomeLine:
     'For my favorite girl, who makes everything a little brighter.',
   welcomeSub:
@@ -17,7 +17,7 @@ export const GIFT_REVEAL_COPY = {
   mainMessage: 'A thousand kisses and the biggest hug just for you <3',
   closing: 'Made with all my love (and cursors love).',
   continueCta: "Let's sleigh",
-  backCta: 'Back to Soliday',
+  backCta: 'Back to Solidays',
 } as const
 
 /** Phase durations in milliseconds (aligned to choreography windows). */

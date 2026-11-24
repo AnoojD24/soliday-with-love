@@ -7,27 +7,27 @@ export type FinalSurprisePhase =
   | 'settled'
   | 'closing'
 
-/** Editable copy for the Merry Soliday final surprise. */
+/** Editable copy for the Merry Solidays final surprise. */
 export const FINAL_SURPRISE_COPY = {
   cardEyebrow: 'Final surprise',
-  cardTitle: 'Merry Soliday',
+  cardTitle: 'Merry Solidays',
   cardTeaser: 'A little surprise wrapped just for you.',
-  cardReady: 'Your Soliday surprise is ready to open.',
+  cardReady: 'Your Solidays surprise is ready to open.',
   cardLockedHint: 'Unlocks after 10 workout days',
   cardUnlockedHint: 'Tap to unwrap',
 
   overlayEyebrow: 'Your final surprise ♡',
   youDidIt: 'YOU DID IT!',
-  title: 'Merry Soliday',
+  title: 'Merry Solidays',
   photoCaption: 'My strong, beautiful girl ♡',
-  photoAlt: 'A keepsake photo from your Soliday journey',
+  photoAlt: 'A keepsake photo from your Solidays journey',
 
   greeting: 'Hi Teddy,',
   letter:
-    "You did it! I'm so proud of you for completing your Soliday challenge. All those early mornings, difficult classes, and long days finally paid off. You deserve that hoodie and the biggest hug from me.",
+    "You did it! I'm so proud of you for completing your Solidays challenge. All those early mornings, difficult classes, and long days finally paid off. You deserve that hoodie and the biggest hug from me.",
   closing: 'With love always <3',
 
-  backCta: 'Back to Soliday',
+  backCta: 'Back to Solidays',
   replayCta: 'Replay celebration ♡',
 } as const
 

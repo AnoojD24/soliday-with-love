@@ -8,7 +8,7 @@ export function InstallGuide({ standalone }: InstallGuideProps) {
       <section className="rounded-[1.5rem] border border-sage bg-sage/40 p-4">
         <p className="font-display text-lg text-berry">You&apos;re home ♡</p>
         <p className="mt-1 text-sm text-berry/75">
-          Soliday is already on your home screen. Enjoy your companion anytime.
+          Solidays is already on your home screen. Enjoy your companion anytime.
         </p>
       </section>
     )
@@ -19,20 +19,20 @@ export function InstallGuide({ standalone }: InstallGuideProps) {
       <div className="flex items-start gap-3">
         <img
           src="/icons/icon-192.png"
-          alt="Soliday With Love app icon"
+          alt="Solidays With Love app icon"
           className="h-14 w-14 rounded-[1.1rem] shadow-[var(--shadow-soft)]"
         />
         <div>
           <h3 className="font-display text-xl text-berry">Take me with you ♡</h3>
           <p className="mt-1 text-sm leading-relaxed text-berry/75">
-            Add your little Soliday companion to your home screen so it&apos;s
+            Add your little Solidays companion to your home screen so it&apos;s
             always just a tap away.
           </p>
         </div>
       </div>
       <ol className="mt-4 space-y-2 text-sm text-berry/85">
         <li>
-          <span className="font-medium text-berry">1.</span> Open Soliday With
+          <span className="font-medium text-berry">1.</span> Open Solidays With
           Love in Safari.
         </li>
         <li>

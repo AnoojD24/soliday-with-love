@@ -191,7 +191,7 @@ export function DecisionCard({
                 <div className="mt-3 rounded-2xl bg-[#fff0f3] px-3 py-3">
                   <p className="text-xs leading-relaxed text-[#9b3a4f]">
                     Reminder: cancel this unused reservation in the official
-                    solidcore app. Soliday cannot cancel it for you.
+                    solidcore app. Solidays cannot cancel it for you.
                   </p>
                   <label className="mt-2 flex min-h-11 items-center gap-2 text-xs text-berry">
                     <input
@@ -283,7 +283,7 @@ export function DecisionCard({
       </div>
       <p className="mt-2 text-[11px] leading-relaxed text-rose">
         Calendar exports do not create or cancel solidcore reservations, and
-        they will not auto-update if you change Soliday later.
+        they will not auto-update if you change Solidays later.
       </p>
     </section>
   )

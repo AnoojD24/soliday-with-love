@@ -30,7 +30,7 @@ export function OfflineIndicator() {
     >
       <div className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-blush bg-cream/95 px-3 py-2 text-xs text-berry shadow-[var(--shadow-soft)] backdrop-blur">
         <WifiOff className="h-3.5 w-3.5 text-rose" aria-hidden="true" />
-        You&apos;re offline — Soliday still works with your saved progress.
+        You&apos;re offline — Solidays still works with your saved progress.
       </div>
     </div>
   )

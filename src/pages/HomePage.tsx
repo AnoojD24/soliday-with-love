@@ -104,7 +104,7 @@ export function HomePage() {
         {!nextWorkout ? (
           <div className="rounded-[1.75rem] border border-blush/70 bg-white/90 px-5 py-6 shadow-[var(--shadow-soft)]">
             <p className="text-xs font-medium tracking-[0.12em] text-rose uppercase">
-              {afterChallenge ? 'Soliday complete' : 'Up next'}
+              {afterChallenge ? 'Solidays complete' : 'Up next'}
             </p>
             <h2 className="mt-2 font-display text-2xl text-berry">
               {afterChallenge
@@ -113,7 +113,7 @@ export function HomePage() {
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-berry/75">
               {afterChallenge
-                ? 'Your scheduled Soliday sessions are complete. Rest in that pride — and add more love on the calendar anytime.'
+                ? 'Your scheduled Solidays sessions are complete. Rest in that pride — and add more love on the calendar anytime.'
                 : 'Add a class whenever you are ready. Your journey stays soft and open.'}
             </p>
           </div>
@@ -228,7 +228,7 @@ export function HomePage() {
       <section className="rounded-[1.75rem] border border-blush/80 bg-white/85 p-5 shadow-[var(--shadow-soft)]">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-xs font-medium tracking-[0.14em] text-rose uppercase">
-            Soliday progress
+            Solidays progress
           </p>
           <HeartMark className="h-4 w-4" />
         </div>
@@ -254,7 +254,7 @@ export function HomePage() {
         {beforeChallenge ? (
           <>
             <h2 className="font-display text-2xl text-berry">
-              Before Soliday begins
+              Before Solidays begins
             </h2>
             <div className="rounded-[1.75rem] border border-dashed border-rose/30 bg-white/70 px-5 py-6">
               <p className="text-sm leading-relaxed text-berry/80">
