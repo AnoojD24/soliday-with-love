@@ -26,7 +26,12 @@ import {
   getNewlyAchievedCelebrations,
   getNewlyUnlockedMilestones,
 } from '../utils/progress'
-import { createInitialState, loadState, saveState } from '../utils/storage'
+import {
+  consumeWelcomeReplayPending,
+  createInitialState,
+  loadState,
+  saveState,
+} from '../utils/storage'
 
 type AppAction =
   | { type: 'COMPLETE_ONBOARDING' }
@@ -161,7 +166,10 @@ const AppStateContext = createContext<AppStateContextValue | null>(null)
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadState)
-  const [replayingWelcome, setReplayingWelcome] = useState(false)
+  // After a PWA "Refresh" for a new deploy, reopen the welcome gift once.
+  const [replayingWelcome, setReplayingWelcome] = useState(() =>
+    consumeWelcomeReplayPending(),
+  )
 
   useEffect(() => {
     saveState(state)

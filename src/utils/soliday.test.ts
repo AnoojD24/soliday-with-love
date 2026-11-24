@@ -23,10 +23,13 @@ import {
   heartSlotsForGoal,
 } from './progress'
 import {
+  consumeWelcomeReplayPending,
   createInitialState,
   exportState,
   isValidPersistedState,
+  markWelcomeReplayPending,
   parseImportedState,
+  resetWelcomeReplayConsumeLatch,
 } from './storage'
 import type { Workout } from '../types/workout'
 
@@ -306,6 +309,36 @@ describe('persistence and onboarding', () => {
     expect(
       parseImportedState(JSON.stringify(without)).openedOpenWhenLetters,
     ).toEqual([])
+  })
+
+  it('replays welcome gift once after a PWA update refresh flag', () => {
+    const store = new Map<string, string>()
+    const session = {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        store.set(key, value)
+      },
+      removeItem: (key: string) => {
+        store.delete(key)
+      },
+      clear: () => store.clear(),
+    }
+    Object.defineProperty(globalThis, 'sessionStorage', {
+      value: session,
+      configurable: true,
+    })
+
+    resetWelcomeReplayConsumeLatch()
+    expect(consumeWelcomeReplayPending()).toBe(false)
+
+    markWelcomeReplayPending()
+    resetWelcomeReplayConsumeLatch()
+    expect(consumeWelcomeReplayPending()).toBe(true)
+    // StrictMode remount / second read still true within the same boot.
+    expect(consumeWelcomeReplayPending()).toBe(true)
+
+    resetWelcomeReplayConsumeLatch()
+    expect(consumeWelcomeReplayPending()).toBe(false)
   })
 })
 

@@ -75,4 +75,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
 
 export const STORAGE_VERSION = 1
 export const STORAGE_KEY = 'soliday-with-love-v1'
+/** Set before SW refresh so the next boot replays the welcome gift. */
+export const PENDING_WELCOME_REPLAY_KEY = 'soliday-pending-welcome-replay'
 export const TIMEZONE = 'America/Los_Angeles'

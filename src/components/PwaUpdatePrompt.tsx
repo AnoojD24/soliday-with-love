@@ -1,4 +1,5 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { markWelcomeReplayPending } from '../utils/storage'
 import { Pressable } from './ui/Pressable'
 
 export function PwaUpdatePrompt() {
@@ -30,6 +31,8 @@ export function PwaUpdatePrompt() {
         <Pressable
           className="px-3 py-2 text-xs"
           onClick={() => {
+            // Survive the SW reload so she gets the gift unwrap again.
+            markWelcomeReplayPending()
             void updateServiceWorker(true)
           }}
         >

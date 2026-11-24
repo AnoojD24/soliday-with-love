@@ -1,6 +1,7 @@
 import { createSeedWorkouts } from '../data/seedWorkouts'
 import {
   DEFAULT_SETTINGS,
+  PENDING_WELCOME_REPLAY_KEY,
   STORAGE_KEY,
   STORAGE_VERSION,
   type AppSettings,
@@ -174,4 +175,36 @@ export function parseImportedState(raw: string): PersistedState {
     throw new Error('Imported data failed validation.')
   }
   return normalizePersistedState(parsed)
+}
+
+/** Survives React StrictMode double-mount in the same JS realm. */
+let welcomeReplayConsumed: boolean | null = null
+
+/** Mark that the next page load should open the welcome gift (PWA update refresh). */
+export function markWelcomeReplayPending(): void {
+  welcomeReplayConsumed = null
+  try {
+    sessionStorage.setItem(PENDING_WELCOME_REPLAY_KEY, '1')
+  } catch {
+    // Private mode / blocked storage — gift replay is best-effort.
+  }
+}
+
+/** Consume the one-shot flag. Stable across StrictMode remounts. */
+export function consumeWelcomeReplayPending(): boolean {
+  if (welcomeReplayConsumed !== null) return welcomeReplayConsumed
+  try {
+    const pending = sessionStorage.getItem(PENDING_WELCOME_REPLAY_KEY) === '1'
+    if (pending) sessionStorage.removeItem(PENDING_WELCOME_REPLAY_KEY)
+    welcomeReplayConsumed = pending
+    return pending
+  } catch {
+    welcomeReplayConsumed = false
+    return false
+  }
+}
+
+/** Test helper — reset in-memory consume latch. */
+export function resetWelcomeReplayConsumeLatch(): void {
+  welcomeReplayConsumed = null
 }
